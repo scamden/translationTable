@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>React - Template</title>
+    <script src="../../js/react.min.js"></script>
+    <script src="../../js/react-dom.min.js"></script>
+    <script src="../../js/browser.min.js"></script>
+    <style type="text/css">
+        .transFrame {
+            direction: rtl;
+        }
+
+        .toolsBox {
+            display: inline-block;
+            border: 1px;
+        }
+
+        .transTab {
+            display: inline-block;
+            background-color: gray;
+            width: 800px;
+            padding-left: 4px;
+            direction: rtl;
+        }
+
+        .subTab {
+            display: inline-block;
+            background-color: white;
+            text-align: center;
+            padding: 10px;
+            margin: 2px 2px 2px 0px
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container"></div>
+
+    <script type="text/babel">
+
+    var TransFrame = React.createClass({
+        render: function(){
+            return (
+                <div className="transFrame">
+                    <ToolsBox />
+                    <TransTab />
+                </div>
+            )
+        }
+    });
+
+    var ToolsBox = React.createClass({
+        render: function(){
+            return (
+                <div className="toolsBox">
+                    <div className="addBox">
+                        <button>Add</button>
+                    </div>
+
+                </div>
+            )
+        }
+    });
+
+    var TransTab = React.createClass({
+        render: function(){
+            return (
+                <div className="transTab">
+                    <SubTab />
+                    <SubTab />
+                </div>
+            )
+        }
+    });
+
+    var SubTab = React.createClass({
+        remove: function(){
+            alert("removing");
+        },
+
+        getInitialState: function(){
+            return {
+                transCells: [
+                    "mlk",
+                    "mlk",
+                    "mlk",
+                    "king",
+                    "parse",
+                    "root"
+                ]
+            }
+        },
+
+        render: function(){
+            return(
+                <div className="subTab">
+                    <button onClick={this.remove}>X</button>
+                    {
+                        this.state.transCells.map(function(text, i){
+                            return (<TransCell key={i}>{text}</TransCell>)
+                        })
+                    }
+                </div>
+            )
+        }
+    });
+
+
+    var TransCell = React.createClass({
+        getInitialState: function(){
+            return {
+                text: "---",
+                editing: false
+            }
+        },
+        edit: function(){
+            this.setState({editing: true});
+
+        },
+
+        save: function(target){
+            if(target.charCode==13){
+                var val = this.refs.newText.value;
+                this.setState({text: val});
+                this.setState({editing: false});
+            }
+
+        },
+
+        renderNormal(){
+            return (
+                <div onClick={this.edit} className="TransCell">
+                        {this.props.children}
+                </div>
+            )
+        },
+        renderForm(){
+            return (
+                 <input ref="newText" type="text" onKeyPress={this.save} className="TransCell" defaultValue={this.props.children}></input>
+            )
+        },
+        render: function(){
+            if(this.state.editing){
+                return this.renderForm();
+            }else{
+                return this.renderNormal();
+            }
+            
+        }
+    });
+
+    ReactDOM.render(<TransFrame />, document.getElementById('container'));
+
+    </script>
+
+</body>
+</html>
